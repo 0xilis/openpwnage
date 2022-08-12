@@ -1,6 +1,4 @@
-/*
- *  this is a patchfinder but bad
- */
+//iOS 9 patchfinder is by spv
 
 #include <stdint.h>
 #include <stdlib.h>
