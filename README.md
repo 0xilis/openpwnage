@@ -1,3 +1,10 @@
+## Credits:
+
+- jailbreak made by 0xilis
+- (jk?) kpmap patch
+- spv/p0laris for patchfinder
+- dora2-ios for part of patchfinder
+
 # openpwnage
 Open source iOS 8.4b4-9.3.6 32bit Semi-Untethered jailbreak
 
@@ -75,10 +82,3 @@ iOS 9 patchfinder is by spv, iOS 8 patchfinder (not on this repo) by dora2-iOS. 
 
 - Please back up first before trying openpwnage.
 - If attempting to jailbreak for the first time on a iOS 9 device, replace `bootstrap.tar` with the old bootstrap openpwnage build 6 / p0laris / Phoenix / Home Depot / h3lix use, and rename it to `bootstrap.tar`. I'll revert back latr in openpwnage Build 10 (if it ever comes out).
-
-## Credits:
-
-- jailbreak made by zachary7829
-- (jk?) kpmap patch
-- spv/p0laris for patchfinder
-- dora2-ios for part of patchfinder
