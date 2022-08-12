@@ -1029,14 +1029,13 @@ bool is_pmap_patch_success(task_t tfp0, uintptr_t kernel_base, uintptr_t kaslr_s
 bool unsandbox(task_t tfp0, uintptr_t kernel_base, uintptr_t kaslr_slide) {
     olog("unsandboxing...\n");
     
-    //i sure do love stealing code from p0laris
-    //basically this like entire function is stolen
+    //dump_kernel from p0laris/spv
     uint8_t* kdata = NULL;
     kdata = malloc(32 * 1024 * 1024);
     dump_kernel(kdata, 32 * 1024 * 1024, tfp0, kaslr_slide);
     if (!kdata) {
-        olog("fuck\n");
-        exit(42);
+        olog("failed to dump kdata, stopping jailbreak\n");
+        return false;
     }
     olog("now...\n");
     
@@ -1085,40 +1084,76 @@ bool unsandbox(task_t tfp0, uintptr_t kernel_base, uintptr_t kaslr_slide) {
     olog("let's go for code exec...\n");
     
     uint32_t tfp0_patch = find_tfp0_patch(kernel_base, kdata, 32 * 1024 * 1024);
-    olog("patching tfp0 at 0x%08x\n",tfp0_patch);
-    kwrite_uint32(kernel_base + tfp0_patch, 0xbf00bf00, tfp0);
+    if (tfp0_patch != 0) {
+        olog("patching tfp0 at 0x%08x\n",tfp0_patch);
+        kwrite_uint32(kernel_base + tfp0_patch, 0xbf00bf00, tfp0);
+    } else {
+        olog("find_tfp0_patch unsuccessful, continuing anyway\n");
+    }
     
     uint32_t mount_common = kernel_base + find_mount_common(kernel_base, kdata, 32 * 1024 * 1024);
-    olog("patching mount_common at 0x%08x\n",mount_common);
-    kwrite_uint8(mount_common, 0xe0, tfp0);
+    if (mount_common != 0) {
+        olog("patching mount_common at 0x%08x\n",mount_common);
+        kwrite_uint8(mount_common, 0xe0, tfp0);
+    } else {
+        olog("find_mount_common unsuccessful, continuing anyway\n");
+    }
     
     uint32_t cs_enforcement_disable_amfi = find_cs_enforcement_disable_amfi(kernel_base, kdata, 32 * 1024 * 1024);
+    if (cs_enforcement_disable_amfi != 0) {
     olog("patching cs_enforcement_disable_amfi at 0x%08x,0x%04x\n",
                 kernel_base + cs_enforcement_disable_amfi - 1,
                 0x0101); //257 //I really don't know why it's not 1
     kwrite_uint8(kernel_base + cs_enforcement_disable_amfi, 1, tfp0);
     kwrite_uint8(kernel_base + cs_enforcement_disable_amfi - 1, 1, tfp0);
+    } else {
+        olog("find_cs_enforcement_disable_amfi unsuccessful, continuing anyway\n");
+    }
     
     uint32_t PE_i_can_has_debugger_1 = find_PE_i_can_has_debugger_1(kernel_base, kdata, 32 * 1024 * 1024);
+    if (PE_i_can_has_debugger_1 != 0) {
     olog("patching PE_i_can_has_debugger_1 at 0x%08x\n",PE_i_can_has_debugger_1);
     kwrite_uint32(kernel_base + PE_i_can_has_debugger_1, 1, tfp0);
+    } else {
+        olog("find_PE_i_can_has_debugger_1 unsuccessful, continuing anyway\n");
+    }
     
     uint32_t PE_i_can_has_debugger_2 = find_PE_i_can_has_debugger_2(kernel_base, kdata, 32 * 1024 * 1024);
+    if (PE_i_can_has_debugger_2 != 0) {
     olog("patching PE_i_can_has_debugger_2 at 0x%08x\n",PE_i_can_has_debugger_2);
     kwrite_uint32(kernel_base + PE_i_can_has_debugger_2, 1, tfp0);
+    } else {
+        olog("find_PE_i_can_has_debugger_2 unsuccessful, continuing anyway\n");
+    }
     
     uint32_t amfi_file_check_mmap = find_amfi_file_check_mmap(kernel_base, kdata, 32 * 1024 * 1024);
+    if (amfi_file_check_mmap != 0) {
     olog("patching amfi_file_check_mmap at 0x%08x\n",
          kernel_base + amfi_file_check_mmap);
     kwrite_uint32(kernel_base + amfi_file_check_mmap, 0xbf00bf00, tfp0);
+    } else {
+        olog("find_amfi_file_check_mmap unsuccessful, continuing anyway\n");
+    }
     
     uint32_t sandbox_call_i_can_has_debugger = find_sandbox_call_i_can_has_debugger(kernel_base, kdata, 32 * 1024 * 1024);
+    if (sandbox_call_i_can_has_debugger != 0) {
     olog("patching sandbox_call_i_can_has_debugger at 0x%08x\n",
          kernel_base + sandbox_call_i_can_has_debugger);
     kwrite_uint32(kernel_base + sandbox_call_i_can_has_debugger, 0xbf00bf00, tfp0);
+    } else {
+        olog("find_sandbox_call_i_can_has_debugger unsuccessful, continuing anyway\n");
+    }
     
     uint32_t lwvm_call = find_lwvm_call(kernel_base, kdata, 32 * 1024 * 1024);
     uint32_t lwvm_call_offset = find_lwvm_call_offset(kernel_base, kdata, 32 * 1024 * 1024);
+    if (lwvm_call != 0) {
+    } else {
+        olog("find_lwvm_call unsuccessful, continuing anyway\n");
+    }
+    if (lwvm_call_offset != 0) {
+    } else {
+        olog("find_lwvm_call_offset unsuccessful, continuing anyway\n");
+    }
     olog("unslid lwvm_call at 0x%08x\n",
          UNSLID_BASE + lwvm_call);
     olog("unslid lwvm_call_off at 0x%08x\n",
