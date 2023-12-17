@@ -10,7 +10,10 @@ Open source iOS 8.4b4-9.3.6 32bit Semi-Untethered jailbreak
 
 ## Notice
 
-iOS 9 patchfinder is by spv, iOS 8 patchfinder (not on this repo) by dora2-iOS. These patchfinders are based off of planetbeing's patchfinder. Please give thanks to them. I'd honestly recommend using Phoenix instead, it's better coded, but if you still want to use openpwnage feel free.
+iOS 9 patchfinder is by spv, iOS 8 patchfinder (not on this repo) by dora2-iOS. These patchfinders are based off of planetbeing's patchfinder. Please give thanks to them.
+
+This shit was a cobbled together and is mostly other people's work and done way worse, please don't use this. I'd honestly recommend using Phoenix instead, it's better coded.
+
 
 ## Supported Devices:
 
